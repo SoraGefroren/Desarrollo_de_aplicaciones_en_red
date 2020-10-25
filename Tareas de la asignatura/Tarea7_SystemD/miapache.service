@@ -1,0 +1,17 @@
+[Unit]
+Description=Demonio MiApache de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/usr/local/miapache/logs/httpd.id
+#Environment=/usr/local/miapache/bin/
+ExecStart=/usr/local/miapache/bin/httpd -k start -d /usr/local/miapache
+ExecStop=/usr/local/miapache/bin/httpd -k stop -d /usr/local/miapache
+ExecReload=/usr/local/miapache/bin/httpd -k restart -d /usr/local/miapache
+PrivateTmp=true
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+Alias=miapache

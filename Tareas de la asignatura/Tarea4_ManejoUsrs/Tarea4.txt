@@ -1,0 +1,45 @@
+#........................................................
+# Título: Manejo de usuarios
+# Fecha: 04/09/2018
+# Autor: Jorge Luis Jácome Domínguez
+# Descripción: Actividad de manejo de usuarios.
+#........................................................
+
+> Se crearon los grupos "Caseros, insectos, looney, simpsons"
+$ groupadd Caseros
+$ groupadd insectos
+$ groupadd looney
+$ groupadd simpsons
+> Se crearon los directorios
+$ mkdir /home/c
+$ mkdir /home/s
+> Se crearon los siguientes usuarios
+$ useradd -d /home/pato -m -k /etc/skel -s /bin/bash -c “Pato” -g Caseros pato
+$ useradd -d /home/c/gato -m -k /etc/skel -s /bin/bash -c “gato” -g Caseros gato
+$ useradd -d /home/s/bart -m -k /etc/skel -s /bin/bash -c “Bartolomeo” -g simpsons bart
+$ useradd -d /home/s/homer -m -k /etc/skel -s /bin/bash -c “Homero” -g simpsons homero
+$ useradd -d /home/s/liza -m -k /etc/skel -s /bin/bash -c “Liza S.” -g simpsons liza
+> Se establecio contraseña para los usuarios antes creados
+$ passwd pato
+patito
+$ passwd gato
+gatito
+$ passwd bart
+bart
+$ passwd homero
+123
+$ passwd liza
+mafslPtucCyt2a
+> Se cambio el nombre de Bart por Bart Simpson
+$ chfn -f “Bart Simpson” bart
+> Se cambio el shell del usuario homero a /bin/sh
+$ chsh -s /bin/sh homero
+> Se cambio el home de pato a /home/c/pato
+$ usermod -d /home/c/pato pato
+> Se cambio el grupo del usuario gato
+$ usermod -g 1002 gato
+> Se instalo John
+$ apt-get install john
+> Se probaron las contraseñas
+$ john /etc/shadow
+

@@ -1,0 +1,9 @@
+Hola y buen día, por ese medio se entrega la tarea de la siguiente forma:
+
+1.- Proceso de personalización de Grub
+> Tarea.txt
+
+2.- Imagenes del Grub personalizado
+> Imagen1.JPG
+> Imagen2.JPG
+> Imagen3.JPG

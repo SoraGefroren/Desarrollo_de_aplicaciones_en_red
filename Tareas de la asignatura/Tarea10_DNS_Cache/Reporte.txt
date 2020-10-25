@@ -1,0 +1,48 @@
+#........................................................
+# Título: DNS Cache
+# Alumno: Jorge Luis Jácome Domínguez
+# Descripción: Establecer servidor DNS Cache.
+#........................................................
+
+>>>> DNS Cache - Servidor
+> Se instalo el paquete bind9
+$ sudo apt-get install bind9
+> Se edito el archivo "/etc/bind/name.conf.options"
+$ sudo nano /etc/bind/name.conf.options
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        forwarders {
+                192.168.1.1;
+        };
+
+        //========================================================================
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+        //========================================================================
+        dnssec-validation auto;
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};
+> Se reinicio el servicio bind9
+$ sudo service bind9 restart
+
+>>>> Cliente
+> Se edito el archivo "/etc/resolv.conf" con ip del servidor
+> Se modifico la dirección del servidor DNS, estableciendo la IP del servidor
+$ sudo nano /etc/resolv.conf
+> Se navego en internet
+> Se desconecto el servidor
+> Se comprobo que ya no podia navegarse en internet
+> Se volvio a conectar el servidor con la misma IP
+> Se volvia a poder navegar en internet

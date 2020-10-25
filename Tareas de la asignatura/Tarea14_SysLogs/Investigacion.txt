@@ -1,0 +1,39 @@
+* Investigar como funciona el sistema de bitácoras de su sistema operativo (por lo general es rsyslog) 
+
+Los sistemas de bitacoran apoya proceso de seguridad y administracion, al poder registrar los eventos que ocurren en sistema operativo.
+El demonio del sistema de bitacoras "syslogd" se lanza automaticamente al arrancar el sistema operarivo.
+Este demonio recibe mensajes de diferentes partes, como el kernel y programas. Tambien es capaz de enviar mensajes a diferentes alogaciones sean del mismo sistema o remota.
+Este demonio sigue el criterio definido en /etc/rsyslog.conf
+En /etc/rsyslog.conf se pueden especificar las reglas a seguir para gestionar el almacenamiento de mensajes del sistema.
+Cada programa que genera un mensaje de syslog, consta de 4 partes:
+	Nombre del programa,
+	Facility (servicio o facilidad)
+	Prioridad
+	Mensaje de bitacora
+
+**** Incluir una prueba de su funcionamiento.
+
+
+* Investigar como se configura la rotación de logs en Linux
+
+Para la rotacion de logs en linux se tiene por defecto a la herramienta lograte.
+La rotacion de logs refiere a:
+	Determinar el tamaño maximo para un archivo log.
+	Tomar acciones como borrar, comprimir o renombar el archivo log, cuando este alcanza su tamaño maximo
+	Especificar el tiempo que se desea mantener vivos a los registros.
+Tanto para el archivo de configuración /etc/lograte.conf, como para aquellos archivos de configuración de /etc/lograte.d/*
+algunas de las directivas que pueden utilizarse para configurar alguno de los servicios, son:
+
+compress: el cual indica que se tiene que comprimir el log que se va a rotar.
+compresscmd: el cual especifica la herramienta de compresión, si no, por defecto se utilizara gzip.
+dateext: el cual indica, que en vez de comprimir, se renombrara el log antiguo.
+dateformat: el cual indicar el formato de fecha a utilizar junto con la directiva anterior.
+daily, weekly, o monthly: los cuales indican cada cuando se va a realizar la rotación, una vez por mes, por semana, o por mes.
+notifempty: el cual indica que no se debe rotar el log si el archivo está vacío.
+size: el cual indica que no se debe de rotar el log hasta que haya alcanzado por lo menos el tamaño indicado.
+rotate: el cual indica a travez del número que le sigue indica cuántos logs deben conservarse luego de haber renombrado o comprimido otros anteriores.
+create: permite especificar los permisos (en forma octal), junto con el dueño y grupo propietario de cada nuevo archivo de log creado por la rotación.
+
+**** Mostrar su configuración con un ejemplo.
+
+

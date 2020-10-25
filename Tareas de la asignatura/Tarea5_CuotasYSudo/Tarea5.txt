@@ -1,0 +1,67 @@
+#........................................................
+# Título: Cuotas y Sudo
+# Fecha: 04/09/2018
+# Autor: Jorge Luis Jácome Domínguez
+# Descripción: Configuración de cuotas y sudo
+#........................................................
+
+> Quotas
+> Se instalo quota
+$ apt-get install quota
+> Se configuro quota
+$ nano /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda6 during installation
+UUID=6dfa2030-c2d0-4fa3-aaad-b81247c4a653 /               ext4    usrquota,grpquota,errors=remount-ro 0       1
+# swap was on /dev/sda5 during installation
+UUID=d2c61a94-2a8d-4b1e-8e31-33e02b635338 none            swap    sw              0       0
+/dev/sr0        /media/cdrom0   udf,iso9660 user,noauto     0       0
+> Se reinicio equipo
+> Se creo cuota para el usuario gato de 4MB en soft y hard.usrquota
+$ edquota -u gato
+  GNU nano 2.7.4              Fichero: /tmp//EdP.a2rLpH3
+Disk quotas for user gato (uid 1004):
+  Filesystem                   blocks       soft       hard     inodes     soft   $
+  /dev/sda6                      1044       4096       4096          6        0   $
+> Se creo cuota para bart de 6MB en soft y 8MB de hard.
+$ edquota -u bart 
+Disk quotas for user bart (uid 1005):
+  Filesystem                   blocks       soft       hard     inodes     soft   $
+  /dev/sda6                        20       6144       8192          5        0   $
+> Se reinicio equipo
+> Se inicio sesión con cada usuario y verifico su quota con el comando "quota"
+
+> Sudo
+> Se instalo sudo
+$ apt-get install sudo
+> Se ejecuto el comando visudo
+$ visudo
+  GNU nano 2.7.4               Fichero: /etc/sudoers.tmp
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# Please consider adding local content in /etc/sudoers.d/ instead of
+# directly modifying this file.
+#
+# See the man page for details on how to write a sudoers file.
+#
+Defaults        env_reset
+Defaults        mail_badpass
+Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sb$
+# Host alias specification
+# User alias specification
+# Cmnd alias specification
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+pato    ALL=(ALL:ALL) NOPASSWD: ALL
+liza    ALL=(ALL:ALL) /usr/sbin/useradd, /usr/sbin/userdel
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+# See sudoers(5) for more information on "#include" directives:
+#includedir /etc/sudoers.d

@@ -1,0 +1,56 @@
+﻿>>>>>> Salir y entrar en Root.
+$ su
+$ exit
+
+>>>>>> Conectar WIFI
+> Si [RTNETLINK answers: Operation not possible due to RF-kill] prender el adaptador
+$ rfkill list all
+$ sudo rfkill unblock all
+> Ver interfaces
+$ lshw -class network
+> Levantar interface WIFI
+$ sudo ip link set wlp1s0 up
+> Buscar redes
+$ sudo iw wlp12s0 scan
+> Crear archivo de conexión
+$ wpa_passphrase "Red Inalambrica Sora" >> /etc/wpa_supplicant/wpa_supplicant.conf
+> Ejecutar archivo de conexión
+$ wpa_supplicant -B -D wext -i wlp12s0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+> Vefificar conexión
+$ iw wlp1s0 link
+> Obtener IP
+$ dhclient wlp12s0 
+> Ver IP
+$ ip addr show wlp12s0	o	$ ifconfig wlp12s0	o	$ ip route show
+
+>>>>>> Conectar WIFI
+# iw dev
+> Lenvatar interface
+# ip link set wlan0 up
+> Ejecutar archivo de conexión
+# wpa_supplicant -B -i wlp12s0 -c /etc/wpa_supplicant.conf
+> Comprobar conexión
+# iw wlp12s0 link
+> Obtener IP
+# dhclient wlp12s0
+
+>>>>>> GitHub
+>* Clonar/Descargar repositorio
+$ git clone https://github.com/whitelionjack/ServiciosDeRed_Tareas/tree/master/Tareas
+> Subir al repositorio
+$ git add .
+$ git commit . -m "Mensaje de actualización"
+$ git push origin master
+>* Para actualizar repositorio
+$ git pull
+$ git branch --set-upstream-to=origin/master master
+	o
+$ git fetch https://github.com/whitelionjack/ServiciosDeRed_Tareas/
+$ git merge origin/master
+
+
+>>>>>> SSH
+$ sudo systemctl status ssh
+$ sudo systemctl start ssh
+$ sudo systemctl stop ssh
+$ sudo systemctl restart ssh

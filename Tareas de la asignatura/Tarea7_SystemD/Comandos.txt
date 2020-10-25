@@ -1,0 +1,52 @@
+#........................................................
+# Programa: Tarea de SystemD - Inicio de Apaches
+# Fecha: 11/08/2018
+# Alumno: Jorge Luis Jácome Domínguez
+# Descripción: Inicio de Servicios Apache al arrancar el sistema
+#........................................................
+
+>>> Tarea
+>>> Crear archivo de servicio para miapache
+$ sudo nano /lib/systemd/system/miapache.service
+[Unit]
+Description=Demonio MiApache de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+[Service]
+Type=forking
+PIDFile=/usr/local/miapache/logs/miapache.id
+#Environment=/usr/local/miapache/bin/
+ExecStart=/usr/local/miapache/bin/apachectl -k start -d /usr/local/miapache
+ExecStop=/usr/local/miapache/bin/apachectl -k stop -d /usr/local/miapache
+ExecReload=/usr/local/miapache/bin/apachectl -k restart -d /usr/local/miapache
+PrivateTmp=true
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+Alias=miapache
+>>> Salvar archivo de servicio miapache
+>>> Habilitar servicio miapache
+$ sudo systemctl enable miapache.service
+$ sudo systemctl start miapache.service
+
+>>> Crear archivo de servicio para miapacheconphp
+$ sudo nano /lib/systemd/system/miapacheconphp.service
+[Unit]
+Description=Demonio MiApacheConPHP de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+[Service]
+Type=forking
+PIDFile=/usr/local/miapacheconphp/logs/miapacheconphp.id
+#Environment=/usr/local/miapacheconphp/bin/
+ExecStart=/usr/local/miapacheconphp/bin/apachectl -k start -d /usr/local/miapacheconphp
+ExecStop=/usr/local/miapacheconphp/bin/apachectl -k stop -d /usr/local/miapacheconphp
+ExecReload=/usr/local/miapacheconphp/bin/apachectl -k restart -d /usr/local/miapacheconphp
+PrivateTmp=true
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+Alias=miapacheconphp
+>>> Salvar archivo de servicio miapacheconphp
+>>> Habilitar servicio miapacheconphp
+$ sudo systemctl enable miapacheconphp.service
+$ sudo systemctl start miapacheconphp.service
+

@@ -1,0 +1,17 @@
+[Unit]
+Description=Demonio MiApacheConPHP de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/usr/local/miapacheconphp/logs/httpd.id
+#Environment=/usr/local/miapacheconphp/bin/
+ExecStart=/usr/local/miapacheconphp/bin/httpd -k start -d /usr/local/miapacheconphp
+ExecStop=/usr/local/miapacheconphp/bin/httpd -k stop -d /usr/local/miapacheconphp
+ExecReload=/usr/local/miapacheconphp/bin/httpd -k restart -d /usr/local/miapacheconphp
+PrivateTmp=true
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+Alias=miapacheconphp

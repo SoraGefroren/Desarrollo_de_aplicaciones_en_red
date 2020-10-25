@@ -1,0 +1,17 @@
+#........................................................
+# Programa: Contador de directorios
+# Fecha: 20/08/2018
+# Autor: Jorge Luis Jácome Domínguez
+# Descripción: Linea con comando necesarios a ser ejecutados en la consola
+#	       para contar el número directorios existentes en el directorio
+#	       actual.
+#........................................................
+
+> Proceso
+$ cat > unArchivo.txt
+> Se escribio
+echo | ls -l -a -d .*/ */ 2>/dev/null  | wc -l
+> Se brindo permisos de ejecusión al archivo
+$ chmod a+x unArchivo.txt
+> Se ejecuto el archivo
+$ ./unArchivo.txt

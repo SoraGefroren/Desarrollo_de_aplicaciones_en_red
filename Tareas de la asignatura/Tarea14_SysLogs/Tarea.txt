@@ -1,0 +1,12 @@
+Elegir un archivo de bitácora de un servicio y
+otro del sistema operativos y
+hacer un programa que de información sobre esas bitácoras,
+	se puede hacer iteractivo.
+	La elección del lenguaje de programación es libre,
+	así como la salida que genere el programa (txt, pantalla, html, pdf, etc).
+
+Investigar como funciona el sistema de bitácoras de su sistema operativo
+(por lo general es rsyslog) a incluir una prueba de su funcionamiento.
+
+Investigar como se configura la rotación de logs en Linux y
+mostrar su configuración con un ejemplo.

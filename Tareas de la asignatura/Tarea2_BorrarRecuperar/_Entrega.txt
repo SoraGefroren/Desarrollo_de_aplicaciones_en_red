@@ -1,0 +1,23 @@
+Hola y buen día, por ese medio se entrega la tarea de la siguiente forma:
+
+1.- Elimina un archivo de manera "segura"
+R = Tarea2s2.sh
+
+2.- Recupere el archivo eliminado con el script anterior
+R = Tarea2s3.sh
+
+3.- Un script que crea scripts
+R = Tarea2s1.sh
+
+4.- Personalizado de "Prompt"
+R = PersonalizarPrompt.txt
+Git = https://github.com/whitelionjack/ServiciosDeRed_Tareas/tree/master/Tareas/Tarea2_BorrarRecuperar/PersonalizarPrompt
+>>> Se modifico de "bashrc" las líneas, en especial "PS1"
+if [ "$color_prompt" = yes ]; then
+    PS1='\[\e[01;30m\][\A]\[\e[01;31m\]\u\[\e[01;37m\]@\[\e[01;32m\]\h\[\e[01;37m\]:\[\e[00;36m\]\w\[\e[00;35m\]\$\[\e[00;37m\]'
+    echo "-----------------------------------------------------------------------------------------------------"
+    echo "-----------------------------------------------------------------------------------------------------"
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+>>> el archivo ".bashrc" se renombro como "bashrc"

@@ -1,0 +1,81 @@
+﻿
+#....................... Proxy Squid
+# Alumno: Jorge Luis Jácome Domínguez
+# Descripción: Configuración de proxy squid
+#........................................................
+
+>>>>>> Se instalo squid3.
+$ sudo apt-get install squid3
+
+>>>>>> Se reviso la IP del puerto de red Ethernet.
+$ sudo ifconfig
+IP = 192.168.1.104
+
+>>>>>> Se edito el archivo de configuración de squid "/etc/squid/squid.conf".
+$ sudo nano /etc/squid/squid.conf
+# http_port 192.168.1.104:3128 transparent
+http_port 3128
+# Memoria asignada
+cache_mem 64 MB
+# Directorios de almacenamiento
+cache_dir autfs /var/spool/squid 500 16 256
+error_directory /usr/share/squid/errors/templates
+##### ACLs
+acl SSL_ports port 443
+acl Safe_ports port 80		# http
+acl Safe_ports port 21		# ftp
+acl Safe_ports port 443		# https
+acl Safe_ports port 70		# gopher
+acl Safe_ports port 210		# wais
+acl Safe_ports port 1025-65535	# unregistered ports
+acl Safe_ports port 280		# http-mgmt
+acl Safe_ports port 488		# gss-http
+acl Safe_ports port 591		# filemaker
+acl Safe_ports port 777		# multiling http
+acl CONNECT method CONNECT
+acl manager proto cache_object
+acl localhost src 127.0.0.1/32
+acl to_localhost dst 127.0.0.0/8 0.0.0.0/32
+acl lista_ip_aceptadas src "/etc/squid/squidips.list"
+acl lista_palabras_negadas url_regex "/etc/squid/squidwords.list"
+##### AUTENTIFICACIÓN SORA
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/squidpass
+acl ncsa proxy_auth REQUIRED
+http_access deny !ncsa
+##### REGLAS DE SORA
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+http_access allow manager localhost
+http_access deny manager
+http_access deny to_localhost
+http_access allow localhost
+http_access deny lista_palabras_negadas
+http_access allow lista_ip_aceptadas
+deny_info ERR_ACCESS_DENIED /etc/squid/squiderror.html
+http_access deny all
+
+>>>>>> Se crearon los archivos de configuración adicionales
+>>>>>> Archivo con direcciones IP validas "/etc/squid/squidips.list"
+$ sudo nano /etc/squid/squidips.list
+192.168.1.0-192.168.1.255
+
+>>>>>> Archivo con palabras prohibidas "/etc/squid/squidwords.list"
+$ sudo nano /etc/squid/squidwords.list
+porno
+anime
+videojuegos
+.facebook.com
+.exe$
+
+>>>>>> Archivo con usuario y contraseña "/etc/squid/squidips.list"
+$ sudo touch /etc/squid/squidpass
+$ sudo htppasswd /etc/squid/squidpass sora
+MiContraseña
+Confirmar: MiContraseña
+
+>>>>>> Se editaron algunos archivos de /usr/share/squid/errors/templates
+
+>>> Se reinicio el servicio de squid.
+$ sudo systemctl stop squid
+$ sudo systemctl start squid
+

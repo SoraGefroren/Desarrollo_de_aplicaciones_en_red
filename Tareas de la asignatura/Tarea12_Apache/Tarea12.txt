@@ -1,0 +1,215 @@
+///// ORACLE
+https://stackoverflow.com/questions/6288122/checking-oracle-sid-and-database-name
+
+
+
+///// MIS PAGINAS
+$ sudo a2enmod userdir
+
+$ sudo nano /etc/apache2/sites-available/000-default.conf
+
+# MIS PAGINAS
+<IfModule mod_userdir.c>
+	UserDir mispaginas
+	UserDir disabled root
+	<Directory /home/*/mispaginas>
+		AllowOverride FileInfo AuthConfig Limit Indexes
+		Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+		Require method GET POST OPTIONS
+	</Directory>
+	</IfModule>
+
+$ cd /home/sora
+$ mkdir mispaginas
+$ cd /home/sora/mispaginas/
+
+$ sudo systemctl restart apache2
+$ sudo systemctl reload apache2
+
+http://127.0.0.1/~sora/index.html
+
+
+///// APACHE
+$ sudo a2enmod rewrite
+$ sudo htpasswd -c /etc/apache2/htpasswd.pass sora
+New password:
+Re-type new password:
+Adding password for user sora
+$ sudo nano /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:80>
+	#ServerName www.example.com
+	
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/principal
+	DirectoryIndex principal.html
+	ErrorDocument 404 /error.html
+	
+	Redirect "/local" "/intranet"
+	
+	<IfModule mod_rewrite.c>
+	    Options +FollowSymLinks -MultiViews
+	    RewriteEngine on
+	    
+	    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+	    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}\.html -f
+	    RewriteRule ^(.*)$ $1.html [L]
+	</IfModule>
+	
+	<Location />
+	    Deny from 192.168.1.109
+	</Location>
+	<Directory "/var/www/principal">
+	    AuthType Basic
+	    AuthName "Restricted Content"
+	    AuthUserFile /etc/apache2/htpasswd.pass
+  	    Require valid-user
+  	</Directory>
+  	
+	#LogLevel info ssl:warn
+	
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+	
+	</VirtualHost>
+
+$ sudo mkdir /var/www/principal
+$ sudo nano /var/www/principal/index.html
+HOLA DESDE PRINCIPAL
+
+$ sudo nano /var/www/principal/intranet.html
+HOLA DESDE INTRANET
+
+$ sudo systemctl restart apache2
+$ sudo systemctl reload apache2
+
+///// PHPMYADMIN
+///// https://tecadmin.net/setup-phpmyadmin-on-linux-using-source/
+$ sudo apt-get install php
+$ sudo apt-get install mysql-server
+
+$ sudo apt install php-bcmath
+$ sudo apt-get install libcurl3 php-curl php-gd php-mcrypt
+$ sudo apt-get install mariadb-server mariadb-client
+$ sudo apt-get install php php-common php-mbstring php-xmlrpc php-soap php-gd php-xml php-intl php-mysql php-cli php-mcrypt php-ldap php-zip php-curl
+$ sudo apt-get install php-mysql
+
+$ sudo a2enmod rewrite
+$ sudo php5enmod mcrypt
+
+$ cd /usr/share
+$ sudo wget https://files.phpmyadmin.net/phpMyAdmin/4.8.3/phpMyAdmin-4.8.3-all-languages.zip
+$ sudo unzip phpMyAdmin-4.8.3-all-languages.zip
+$ sudo rm -r phpMyAdmin-4.8.3-all-languages.zip
+$ sudo mv phpMyAdmin-4.8.3-all-languages.zip phpmyadmin
+
+$ sudo chown -R www-data:www-data /usr/share/phpmyadmin
+$ sudo chmod -R 755 /usr/share/phpmyadmin
+
+$ sudo nano /etc/apache2/conf-available/phpmyadmin.conf
+<Directory "/usr/share/phpmyadmin">
+  Order Deny,Allow
+  Deny from all
+  Allow from localhost
+  Allow from 127.0.0.1
+  Options FollowSymLinks
+  DirectoryIndex index.php
+  </Directory>
+Alias /phpmyadmin /usr/share/phpmyadmin
+Alias /phpMyAdmin /usr/share/phpmyadmin
+
+$ sudo nano /etc/apache2/apache2.conf
+Include /etc/apache2/conf-available/phpmyadmin.conf
+
+$ sudo nano /usr/share/phpmyadmin/config.sample.inc.php 
+$cfg['ForceSSL'] = 'true';
+
+$ sudo systemctl restart apache2
+$ sudo systemctl reload apache2
+
+///// CMS
+///// Magento
+///// https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-magento-on-ubuntu-14-04
+
+$ sudo nano /etc/php/7.0/apache2/php.ini
+memory_limit = 512M
+
+$ cd /home/sora/Descargas
+$ sudo mkdir /var/www/principal/magento
+$ sudo mv Magento-CE-2.2.6-2018-09-07-02-12-38.tar.gz /var/www/principal/magento
+$ cd /var/www/principal/magento
+
+$ sudo tar xzvf Magento-CE-2.2.6-2018-09-07-02-12-38.tar.gz
+$ sudo rm -r Magento-CE-2.2.6-2018-09-07-02-12-38.tar.gz
+$ sudo nano /etc/apache2/conf-available/magento.conf
+<Directory "/var/www/principal/magento">
+  Order Deny,Allow
+  Deny from all
+  Allow from localhost
+  Allow from 127.0.0.1
+  Options Indexes FollowSymLinks MultiViews
+  DirectoryIndex index.php
+  </Directory>
+
+Alias /magento /var/www/principal/magento
+
+$ sudo nano /etc/apache2/apache2.conf
+Include /etc/apache2/conf-available/magento.conf
+
+$ sudo mysql -u root -p
+MariaDB [(none)]> CREATE DATABASE magento;
+MariaDB [(none)]> CREATE USER magento@localhost IDENTIFIED BY 'Rider';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON magento.* TO magento@localhost IDENTIFIED BY 'password';
+MariaDB [(none)]> FLUSH PRIVILEGES;
+MariaDB [(none)]> exit;
+
+$ sudo systemctl restart apache2
+$ sudo systemctl reload apache2
+
+http://127.0.0.1/magento/setup
+
+
+
+
+///// Blog
+///// WordPress
+
+$ mkdir /var/www/principal/miblog
+$ cd /var/www/principal/miblog
+$ sudo wget https://wordpress.org/latest.tar.gz
+$ sudo tar xzvf wordpress-4.9.8.tar.gz
+$ sudo rm -r wordpress-4.9.8.tar.gz
+
+$ sudo chown -R www-data:www-data /var/www/principal/miblog
+$ sudo chmod -R 755 /var/www/principal/miblog
+
+$ sudo nano /etc/apache2/conf-available/miblog.conf
+<Directory "/var/www/principal/miblog">
+  Order Deny,Allow
+  Deny from all
+  Allow from localhost
+  Allow from 127.0.0.1
+  Options Indexes FollowSymLinks MultiViews
+  DirectoryIndex index.php
+  </Directory>
+
+Alias /miblog /var/www/principal/miblog
+
+$ sudo nano /etc/apache2/apache2.conf
+Include /etc/apache2/conf-available/miblog.conf
+
+$ sudo systemctl restart apache2
+$ sudo systemctl reload apache2
+
+$ sudo mysql -u root -p
+MariaDB [(none)]> CREATE DATABASE magento;
+MariaDB [(none)]> CREATE USER magento@localhost IDENTIFIED BY 'Rider';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON magento.* TO magento@localhost IDENTIFIED BY 'password';
+MariaDB [(none)]> FLUSH PRIVILEGES;
+MariaDB [(none)]> exit;
+
+http://127.0.0.1/miblog
+
+
+
+
+

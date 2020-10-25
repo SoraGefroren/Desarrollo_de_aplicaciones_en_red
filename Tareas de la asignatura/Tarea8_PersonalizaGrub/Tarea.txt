@@ -1,0 +1,18 @@
+#!/bin/bash
+#........................................................
+# Autor: Jorge Luis Jácome Domínguez
+# Descripción: Proceso de personalizado de Grub.
+#........................................................
+
+> Se instalaron los paquetes
+$ sudo apt install grub2-splashimages
+$ sudo apt install desktop-base
+> Se coloco la imagen en la ruta "/usr/share/images/desktop-base/"
+$ sudo cp /home/sora/Imágenes/pGrub/S.png /usr/share/images/desktop-base/desktop-grub.png 
+> Se edito el archivo "grub"
+$ sudo nano /etc/default/grub
+> Se agrego la linea 
+GRUB_BACKGROUND="/usr/share/images/desktop-base/desktop-grub.png"
+> Se ejecuto el siguente comando
+$ sudo update-grub
+> Y se reinicio la maquina para ver el cambio

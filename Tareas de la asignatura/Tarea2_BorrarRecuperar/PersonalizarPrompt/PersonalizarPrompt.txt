@@ -1,0 +1,16 @@
+#!/bin/bash
+#........................................................
+# Alumno: Jorge Luis Jácome Domínguez
+# Descripción: Proceso para personalizar Prompt.
+#........................................................
+
+> Acceder al archivo "~/.bashrc"
+$ sudo nano .bashrc
+> Se modifico de "bashrc" las líneas, en especial "PS1"
+if [ "$color_prompt" = yes ]; then
+    PS1='\[\e[01;30m\][\A]\[\e[01;31m\]\u\[\e[01;37m\]@\[\e[01;32m\]\h\[\e[01;37m\]:\[\e[00;36m\]\w\[\e[00;35m\]\$\[\e[00;37m\] '
+    echo "-----------------------------------------------------------------------------------------------------"
+    echo "-----------------------------------------------------------------------------------------------------"
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi

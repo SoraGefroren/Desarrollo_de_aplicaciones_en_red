@@ -1,0 +1,113 @@
+#........................................................
+# Título: Instalación de Tree, Apache y PHP
+# Fecha: 25/08/2018
+# Alumno: Jorge Luis Jácome Domínguez
+# Descripción: Proceso que se siguo para compilar e Instalar Tree,
+#	           Apache, y Apache con PHP.
+#........................................................
+
+Programa tree
+> Se descargo archivo .gz, desde la página "http://mama.indstate.edu/users/ice/tree/"
+> Se descomprimio el archivo
+$ tar zxvf tree-1.7.0.tgz
+> Se accedio a la carpeta del archivo
+$ cd tree-1.7.0
+> Se instalo una libreria adicional antes de compilar e instalar
+> Se compilo el programa
+$ make
+> Se instalao el programa
+$ make install
+> Se busco el mensaje de error de la practica
+$ grep "Mensaje de error" *.c
+> Con un editor de archivos abrieron los archivos con el mensaje de la practica
+$ nano NombreArchivo.c
+> Se modificaron los mensajes de error
+
+Servidor Apache
+> Se descargo un archivo .gz del repositorio de Apache
+> Se instalaron las librerias "ARP, Xml2"
+> Se descomprimio el archivo
+$ tar zxvf httpd-2.4.34.tar.gz
+> Se accedio a la carpeta del archivo
+$ cd httpd-2.4.34
+> Se configuraron los parametros de compilación e instalación
+$ ./configure --prefix=/usr/local/miapache
+> Se compilo e instalo el programa
+$ make
+$ make install
+> Se accedio a la ruta de instalación
+$ cd /usr/local/miapache
+> Se abrio el archivo de configuración para su edición
+$ nano /usr/local/miapache/conf/httpd.conf
+> Se cambio el puerto de Apache al 10080
+> Se inicio el servicio de Apache
+$ /usr/local/miapache/bin/apachectl start -d /usr/local/miapache
+
+Servidor Apache con PHP
+> Se instalaron librerias necesarias para Apache
+$ apt-get install apache2-dev
+$ apt-get install build-essential
+> Se configuraron los parametros de compilación e instalación
+$ ./configure --enable-so --prefix=/usr/local/miapacheconphp
+> Se compilo e instalo el programa Apache
+$ make
+$ make install
+> Se accedio a la ruta de instalación del programa
+$ cd /usr/local/miapacheconphp
+> Se abrio el archivo de configuración para su edición
+$ nano /usr/local/miapacheconphp/conf/httpd.conf
+> Se cambio el puerto de Apache al 11080
+> Se inicio el servicio de Apache
+$ /usr/local/miapacheconphp/bin/apachectl start -d /usr/local/miapacheconphp
+> Se detuvieron los servicios de apache actuales
+$ /usr/local/miapacheconphp/bin/apachectl stop-d /usr/local/miapacheconphp
+$ /usr/local/miapache/bin/apachectl stop-d /usr/local/miapache
+> Se cambio la ruta actual
+> Se descargo un archivo .gz del repositorio de PHP
+> Se descomprimio el archivo de PHP
+$ tar zxvf php-7.1.21.tar.gz
+> Se accedio a los archivos de PHP
+$ cd php-7.1.21
+> Se instalaron librerias adicionales
+$ apt-get install libxml2-dev
+$ apt-get install libcurl4-openssl-dev
+$ apt-get install libjpeg-dev
+$ apt-get install libpng-dev
+$ apt-get install libxpm-dev
+$ apt-get install libmysqlclient-dev
+$ apt-get install libpq-dev
+$ apt-get install libicu-dev
+$ apt-get install libfreetype6-dev
+$ apt-get install libldap2-dev
+$ apt-get install libxslt-dev
+> Se configuraron los parametros para compilar e instalar
+$ ./configure --prefix=/usr/local/miapacheconphp/miphp --with-apxs2=/usr/local/miapacheconphp/bin/apxs --with-mysqli
+> Se limpio "make" por configuraciones anteriores
+$ make clean
+> Se compilo e instalo PHP
+> $ make
+> $ make install
+> Se abrio el archivo de configuracipon de Apache
+$ nano /usr/local/miapache/conf/httpd.conf
+> Se agregaron las lineas
+	LoadModule php5_module  modules/libphp5.so
+
+	AddType application/x-http-php  .php
+
+	DirectoryIndex  index.php  index.html
+
+	<FilesMatch \.php$>
+	    SetHandler application/x-httpd-php
+	</FilesMatch>
+> Se borro el archivo index.html del servidor Apache
+$ rm -r /usr/local/miapache/htdocs/index.html
+> Se creo un archivo index.php en la ruta de donde se borro index.html
+$ cat > /usr/local/miapache/htdocs/index.php
+> contenido del archivo .php
+	<?php
+    	   phpinfo();
+	?>
+> Se reinicio el servicio de Apache
+$ /usr/local/miapacheconphp/bin/apachectl restart -d /usr/local/miapacheconphp
+
+

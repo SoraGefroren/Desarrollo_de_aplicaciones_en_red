@@ -1,0 +1,118 @@
+#........................................................
+# Programa: Tarea de SystemD - Inicio de Apaches
+# Fecha: 11/08/2018
+# Autor: Jorge Luis Jácome Domínguez
+# Descripción: Inicio de Servicios Apache al arrancar el sistema
+#........................................................
+
+>>> Ejemplos
+>>> Creando Raton.Py
+$ sudo nano /etc/systemd/system/raton.py
+#!/usr/bin/python
+import SocketServer
+from BaseHTTPServer import BaseHTTPRequestHandler
+class MyHandler (BaseHTTPRequestHandler):
+ def do_GET (self):
+  self.send_response(200)
+  self.send_header("Content-type", "text/plain")
+  self.end_headers()
+  self.wfile.write('<:3)~~~\n')
+httpd = SocketServer.TCPServer(("", 8888), MyHandler)
+httpd.serve_forever()
+>>> Salvar raton.py
+>>> Crear archivo de servicio para raton.py
+$ sudo nano /lib/systemd/system/raton.py.service
+[Unit]
+Description=Inicio de Servicio de raton
+[Service]
+ExecStart=/etc/systemd/system/raton.py
+StandardOutput=null
+[Install]
+WantedBy=multi-user.target
+Alias=mouselogger.service
+>>> Salvar archivo de servicio raton.py
+>>> Habilitar servicio raton.py
+$ sudo systemctl enable raton.py.service
+$ sudo systemctl start raton.py.service
+>>> Probar servicio raton.py
+$ elinks https://127.0.0.1:8888
+
+>>> Creando Rot13.php
+$ sudo apt-get install php
+$ sudo nano /etc/systemd/system/rot13.php
+<?php
+ $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+ socket_bind($sock, '0.0.0.0', 10000);
+ for(;;){
+  socket_recvfrom($sock, $message, 1024, 0, $ip, $port);
+  $reply=str_rot13($message);
+  socket_sendto($sock, $reply, strlen($reply), 0, $ip, $port);
+ }
+?>
+>>> Salvar rot13.php
+>>> Crear archivo de servicio para rot13.php
+$ sudo nano /lib/systemd/system/rot13.php.service
+[Unit]
+Description=ROT13 demonio de servicio
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=nobody
+ExecStart=/usr/bin/env php /etc/systemd/system/rot13.php
+[Install]
+WantedBy=multi-user.target
+>>> Salvar archivo de servicio rot13.php
+>>> Habilitar servicio rot13.php
+$ sudo systemctl enable rot13.php.service
+$ sudo systemctl start rot13.php.service
+>>> Probar servicio rot13.php
+$ nc -u 127.0.0.1 10000
+
+>>> Tarea
+>>> Crear archivo de servicio para miapache
+$ sudo nano /lib/systemd/system/miapache.service
+[Unit]
+Description=Demonio MiApache de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+[Service]
+Type=forking
+PIDFile=/usr/local/miapache/logs/miapache.id
+#Environment=/usr/local/miapache/bin/
+ExecStart=/usr/local/miapache/bin/apachectl -k start -d /usr/local/miapache
+ExecStop=/usr/local/miapache/bin/apachectl -k stop -d /usr/local/miapache
+ExecReload=/usr/local/miapache/bin/apachectl -k restart -d /usr/local/miapache
+PrivateTmp=true
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+Alias=miapache
+>>> Salvar archivo de servicio miapache
+>>> Habilitar servicio miapache
+$ sudo systemctl enable miapache.service
+$ sudo systemctl start miapache.service
+
+>>> Crear archivo de servicio para miapacheconphp
+$ sudo nano /lib/systemd/system/miapacheconphp.service
+[Unit]
+Description=Demonio MiApacheConPHP de servicio
+After= syslog.target network.target network-online.target remote-fs.target nss-lookup.target
+[Service]
+Type=forking
+PIDFile=/usr/local/miapacheconphp/logs/miapacheconphp.id
+#Environment=/usr/local/miapacheconphp/bin/
+ExecStart=/usr/local/miapacheconphp/bin/apachectl -k start -d /usr/local/miapacheconphp
+ExecStop=/usr/local/miapacheconphp/bin/apachectl -k stop -d /usr/local/miapacheconphp
+ExecReload=/usr/local/miapacheconphp/bin/apachectl -k restart -d /usr/local/miapacheconphp
+PrivateTmp=true
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+Alias=miapacheconphp
+>>> Salvar archivo de servicio miapacheconphp
+>>> Habilitar servicio miapacheconphp
+$ sudo systemctl enable miapacheconphp.service
+$ sudo systemctl start miapacheconphp.service
+
